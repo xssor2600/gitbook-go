@@ -1,5 +1,5 @@
 #### Go 程序执行过程（const>var>init)
-![image](https://s3.ax1x.com/2020/12/20/rartZd.png)
+[![rartZd.png](https://s3.ax1x.com/2020/12/20/rartZd.png)](https://imgchr.com/i/rartZd)</br>
 从一下几点针对Go源代码中初始化过程进行学习理解。
 
 > 什么是init函数，可以定义在那些地方，是否可以重复定义多个同名函数?
