@@ -1,17 +1,6 @@
 # Initial page
 
-## Getting Super Powers
+## 开始
+主要作为golang学习过程中的点滴积累记录。 
 
-Becoming a super hero is a fairly straight forward process:
-
-```text
-$ give me super-powers
-```
-
-Once you're strong enough, save the world:
-
-```bash
-# Ain't no code for that yet, sorry
-echo 'You got to trust me on this, I saved the world'
-```
 
