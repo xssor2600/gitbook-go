@@ -197,30 +197,29 @@
 5. 使用Usage
 
    ```go
-      func Test_builder(t *testing.T) {
-      	// 使用相同构建过程，创建支付订单对象
-      	payOrder:= NewOrderBuilder().WithOrderId("EG001").
+    func Test_builder(t *testing.T) {
+      		// 使用相同构建过程，创建支付订单对象
+      		payOrder:= NewOrderBuilder().WithOrderId("EG001").
       		WithPrice(20.40).
       		WithUid(10010).
       		WithGoodName("商品").
       		WithType("支付订单").Build()
       
         // 使用相同构建过程，创建外卖单对象
-      	footOrder:= NewFootOrderBuilder().WithOrderId("F001").
+      		footOrder:= NewFootOrderBuilder().WithOrderId("F001").
       		WithPrice(10.40).
       		WithUid(10010).
       		WithGoodName("酸奶").
       		WithType("商品订单").Build()
       
-      	sorder,_ := json.Marshal(payOrder)
-      	forder,_ := json.Marshal(footOrder)
+      		sorder,_ := json.Marshal(payOrder)
+      		forder,_ := json.Marshal(footOrder)
       
-      
-      	//fmt.Println(reflect.TypeOf(order).Kind())
-      	//fmt.Println(reflect.ValueOf(payOrder))
-      	fmt.Printf(string(sorder))
-      	fmt.Println("")
-      	fmt.Printf(string(forder))
+      		//fmt.Println(reflect.TypeOf(order).Kind())
+      		//fmt.Println(reflect.ValueOf(payOrder))
+      		fmt.Printf(string(sorder))
+      		fmt.Println("")
+      		fmt.Printf(string(forder))
       }
    ```
 
