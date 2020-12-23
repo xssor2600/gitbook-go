@@ -71,7 +71,6 @@
 1. 定义建造者最终的产品实体Product(产品都有相同的构建过程)
 
    ```go
-   // 产品1：支付订单Product
    type Order struct {
    	OrderId string
    	Price Money
@@ -82,7 +81,7 @@
    	// ...
    }
    
-   // 产品2：外卖订单Product
+   // 外卖订单Product
    type FootOrder struct {
    	OrderId string
    	Price Money
@@ -98,9 +97,8 @@
 
 2. 抽象建造者Builder
 
-   ```go
-   //2. 抽象产品实体构建过程
-   // 抽象建造者Builder，描述具体建造者的公共接口，一般用来定义建造细节的方法
+  ```go
+  // 抽象建造者Builder，描述具体建造者的公共接口，一般用来定义建造细节的方法
    type Builder interface {
    	WithOrderId(orderId string) Builder
    	WithPrice(p Money)  Builder
@@ -116,7 +114,6 @@
 3. 不同产品复用相同构建过程的实现（实现具体建造者ConcreteBuilder）
 
    ```go
-   // 产品1: 支付订单Order的具体构建过程
    func (od Order) WithOrderId(oid string) Builder {
    	if len(oid) > 0 {
    		od.OrderId = oid
