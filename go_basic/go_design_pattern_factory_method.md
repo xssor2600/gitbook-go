@@ -234,19 +234,17 @@
      
      ```
 
-     
-
   3. 使用方式Usage
 
      ```go
-     func main() {
+   func main() {
          // 创建工厂对象，并根据传入内容进行创建具体的Product
          param := BaseReq{}
      	  payOrder,code,errr := newOrderFactory().createOrder(param)
          fmt.Printf(payOrder.Get().Order)
      }
      ```
-
+  
      
 
 - 工厂方法模式

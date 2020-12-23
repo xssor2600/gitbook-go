@@ -44,8 +44,6 @@
 
      
 
-     
-
    - **相同的构造流程可以产出不同的表现层**
 
      因为对象构建过程是抽象的！那么有相同构建过程的产品，都可以复用改构建过程，从而可以组合创建不同的产品。
@@ -97,187 +95,194 @@
 
 2. 抽象建造者Builder
 
-  ```go
-  // 抽象建造者Builder，描述具体建造者的公共接口，一般用来定义建造细节的方法
-   type Builder interface {
-   	WithOrderId(orderId string) Builder
-   	WithPrice(p Money)  Builder
-   	WithUid(uid int64)  Builder
-   	WithGoodName(gn string)  Builder
-   	WithType(otype string) Builder
-   	Build() Builder
-   }
+   ```go
+   	  // 抽象建造者Builder，描述具体建造者的公共接口，一般用来定义建造细节的方法
+      type Builder interface {
+      	WithOrderId(orderId string) Builder
+      	WithPrice(p Money)  Builder
+      	WithUid(uid int64)  Builder
+      	WithGoodName(gn string)  Builder
+      	WithType(otype string) Builder
+      	Build() Builder
+      }
    ```
 
-3. 不同产品复用相同构建过程的实现者ConcreteBuilder）
+   
 
- ```go
-   func (od Order) WithOrderId(oid string) Builder {
-   	if len(oid) > 0 {
-   		od.OrderId = oid
-   	}
-   	return od
-   }
-   func (od Order) WithPrice(m Money) Builder {
-   	od.Price = m
-   	return od
-   }
-   
-   func (od Order) WithUid(uid int64) Builder {
-   	od.UserId = uid
-   	return od
-   }
-   
-   func (od Order) WithGoodName(gn string) Builder {
-   	od.GoodName = gn
-   	return od
-   }
-   
-   func (od Order) WithType(otype string) Builder {
-   	od.OrderType = otype
-   	return od
-   }
-   
-   func (od Order) Build() Builder{
-      // TODO 可以在创建的对象前置处理.....
-   	return od
-   }
-   
-   
-   // 产品2: 外卖订单Order的具体构建过程
-   func (fo FootOrder) WithOrderId(oid string) Builder {
-   	if len(oid) > 0 {
-   		fo.OrderId = oid
-   	}
-   	return fo
-   }
-   func (fo FootOrder) WithPrice(m Money) Builder {
-   	fo.Price = m
-   	return fo
-   }
-   
-   func (fo FootOrder) WithUid(uid int64) Builder {
-   	fo.UserId = uid
-   	return fo
-   }
-   
-   func (fo FootOrder) WithGoodName(gn string) Builder {
-   	fo.GoodName = gn
-   	return fo
-   }
-   
-   func (fo FootOrder) WithType(otype string) Builder {
-   	fo.OrderType = otype
-   	return fo
-   }
-   
-   func (fo FootOrder) Build() Builder{
-     // TODO 可以在创建的对象前置处理.....
-   	return fo
-   }
-   
+3. 不同产品复用相同构建过程的实现者
+
+   ```go
+    func (od Order) WithOrderId(oid string) Builder {
+      	if len(oid) > 0 {
+      		od.OrderId = oid
+      	}
+      	return od
+      }
+      func (od Order) WithPrice(m Money) Builder {
+      	od.Price = m
+      	return od
+      }
+      
+      func (od Order) WithUid(uid int64) Builder {
+      	od.UserId = uid
+      	return od
+      }
+      
+      func (od Order) WithGoodName(gn string) Builder {
+      	od.GoodName = gn
+      	return od
+      }
+      
+      func (od Order) WithType(otype string) Builder {
+      	od.OrderType = otype
+      	return od
+      }
+      
+      func (od Order) Build() Builder{
+         // TODO 可以在创建的对象前置处理.....
+      	return od
+      }
+      
+      
+      // 产品2: 外卖订单Order的具体构建过程
+      func (fo FootOrder) WithOrderId(oid string) Builder {
+      	if len(oid) > 0 {
+      		fo.OrderId = oid
+      	}
+      	return fo
+      }
+      func (fo FootOrder) WithPrice(m Money) Builder {
+      	fo.Price = m
+      	return fo
+      }
+      
+      func (fo FootOrder) WithUid(uid int64) Builder {
+      	fo.UserId = uid
+      	return fo
+      }
+      
+      func (fo FootOrder) WithGoodName(gn string) Builder {
+      	fo.GoodName = gn
+      	return fo
+      }
+      
+      func (fo FootOrder) WithType(otype string) Builder {
+      	fo.OrderType = otype
+      	return fo
+      }
+      
+      func (fo FootOrder) Build() Builder{
+        // TODO 可以在创建的对象前置处理.....
+      	return fo
+      }
+      
    ```
+
+   
 
 4. 构建产品构建指挥者Director
 
-```go
+   ```go
    // 构造Director，用来具体构建对象
-   func NewOrderBuilder() Builder {
-   	return &Order{}
-   }
+      func NewOrderBuilder() Builder {
+      	return &Order{}
+      }
+      
+      func NewFootOrderBuilder() Builder {
+      	return &FootOrder{}
+      }
+   ```
+
    
-   func NewFootOrderBuilder() Builder {
-   	return &FootOrder{}
-   }
-```
 
 5. 使用Usage
 
-```go
-   func Test_builder(t *testing.T) {
-   	// 使用相同构建过程，创建支付订单对象
-   	payOrder:= NewOrderBuilder().WithOrderId("EG001").
-   		WithPrice(20.40).
-   		WithUid(10010).
-   		WithGoodName("商品").
-   		WithType("支付订单").Build()
+   ```go
+      func Test_builder(t *testing.T) {
+      	// 使用相同构建过程，创建支付订单对象
+      	payOrder:= NewOrderBuilder().WithOrderId("EG001").
+      		WithPrice(20.40).
+      		WithUid(10010).
+      		WithGoodName("商品").
+      		WithType("支付订单").Build()
+      
+        // 使用相同构建过程，创建外卖单对象
+      	footOrder:= NewFootOrderBuilder().WithOrderId("F001").
+      		WithPrice(10.40).
+      		WithUid(10010).
+      		WithGoodName("酸奶").
+      		WithType("商品订单").Build()
+      
+      	sorder,_ := json.Marshal(payOrder)
+      	forder,_ := json.Marshal(footOrder)
+      
+      
+      	//fmt.Println(reflect.TypeOf(order).Kind())
+      	//fmt.Println(reflect.ValueOf(payOrder))
+      	fmt.Printf(string(sorder))
+      	fmt.Println("")
+      	fmt.Printf(string(forder))
+      }
+   ```
+
    
-     // 使用相同构建过程，创建外卖单对象
-   	footOrder:= NewFootOrderBuilder().WithOrderId("F001").
-   		WithPrice(10.40).
-   		WithUid(10010).
-   		WithGoodName("酸奶").
-   		WithType("商品订单").Build()
-   
-   	sorder,_ := json.Marshal(payOrder)
-   	forder,_ := json.Marshal(footOrder)
-   
-   
-   	//fmt.Println(reflect.TypeOf(order).Kind())
-   	//fmt.Println(reflect.ValueOf(payOrder))
-   	fmt.Printf(string(sorder))
-   	fmt.Println("")
-   	fmt.Printf(string(forder))
-   }
-```
+
 6. 用插件自动生成的建造者模式代码
 
- 改种方式是通过组合产品对象product与对应的建造者来创建对象。
+    改种方式是通过组合产品对象product与对应的建造者来创建对象。
 
- ```go
+   ```go
    // Order builder pattern code
-   type OrderBuilder struct {
-   	order *Order
-   }
-   
-   func NewOrderBuilder() *OrderBuilder {
-   	order := &Order{}
-   	b := &OrderBuilder{order: order}
-   	return b
-   }
-   
-   func (b *OrderBuilder) OrderId(orderId string) *OrderBuilder {
-   	b.order.OrderId = orderId
-   	return b
-   }
-   
-   func (b *OrderBuilder) Price(price float64) *OrderBuilder {
-   	b.order.Price = price
-   	return b
-   }
-   
-   func (b *OrderBuilder) UserId(userId int64) *OrderBuilder {
-   	b.order.UserId = userId
-   	return b
-   }
-   
-   func (b *OrderBuilder) GoodName(goodName string) *OrderBuilder {
-   	b.order.GoodName = goodName
-   	return b
-   }
-   
-   func (b *OrderBuilder) OrderType(orderType string) *OrderBuilder {
-   	b.order.OrderType = orderType
-   	return b
-   }
-   
-   func (b *OrderBuilder) Build() (*Order, error) {
-   	return b.order, nil
-   }
-   
-   
-   
-   // usage
-   	payOrder:= NewOrderBuilder().WithOrderId("EG001").
-   		WithPrice(20.40).
-   		WithUid(10010).
-   		WithGoodName("商品").
-  		WithType("支付订单").Build()
-```
+      type OrderBuilder struct {
+      	order *Order
+      }
+      
+      func NewOrderBuilder() *OrderBuilder {
+      	order := &Order{}
+      	b := &OrderBuilder{order: order}
+      	return b
+      }
+      
+      func (b *OrderBuilder) OrderId(orderId string) *OrderBuilder {
+      	b.order.OrderId = orderId
+      	return b
+      }
+      
+      func (b *OrderBuilder) Price(price float64) *OrderBuilder {
+      	b.order.Price = price
+      	return b
+      }
+      
+      func (b *OrderBuilder) UserId(userId int64) *OrderBuilder {
+      	b.order.UserId = userId
+      	return b
+      }
+      
+      func (b *OrderBuilder) GoodName(goodName string) *OrderBuilder {
+      	b.order.GoodName = goodName
+      	return b
+      }
+      
+      func (b *OrderBuilder) OrderType(orderType string) *OrderBuilder {
+      	b.order.OrderType = orderType
+      	return b
+      }
+      
+      func (b *OrderBuilder) Build() (*Order, error) {
+      	return b.order, nil
+      }
+      
+      
+      
+      // usage
+      	payOrder:= NewOrderBuilder().WithOrderId("EG001").
+      		WithPrice(20.40).
+      		WithUid(10010).
+      		WithGoodName("商品").
+     		WithType("支付订单").Build()
+   ```
 
    
-
-
 
 ---
 
