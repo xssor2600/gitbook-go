@@ -333,65 +333,63 @@
 3. 不同产品具体建造者实现（实现具体建造者ConcreteBuilder）
 
    ```java
-   public class AngelBuilder extends ActorBuilder {
-   	@Override
-   	public void buildType() {
-   		actor.setType("天使");
-   	}
+   	public class AngelBuilder extends ActorBuilder {
+   		@Override
+   		public void buildType() {
+   			actor.setType("天使");
+   		}
     
-   	@Override
-   	public void buildSex() {
-   		actor.setSex("AngelSex");
-   	}
+   		@Override
+   		public void buildSex() {
+   			actor.setSex("AngelSex");
+   		}
     
-   	@Override
-   	public void buildFace() {
-   		actor.setFace("AngelFace");
-   	}
+   		@Override
+   		public void buildFace() {
+   			actor.setFace("AngelFace");
+   		}
     
-   	@Override
-   	public void buildCostume() {
-   		actor.setCostume("AngelCostume");
-   	}
+   		@Override
+   		public void buildCostume() {
+   			actor.setCostume("AngelCostume");
+   		}
     
-   	@Override
-   	public void buildHairstyle() {
-   		actor.setHairstyle("AngelHairStyle");
-   	}
+   		@Override
+   		public void buildHairstyle() {
+   			actor.setHairstyle("AngelHairStyle");
+   		}
      
-     // 另外一种产品实现
+     	// 另外一种产品实现
      public class GhostBuilder extends ActorBuilder {
     
-   	@Override
-   	public void buildType() {
-   		actor.setType("精灵");
+   		@Override
+   		public void buildType() {
+   			actor.setType("精灵");
+   		}
+    
+   		@Override
+   		public void buildSex() {
+   			actor.setSex("GhostSex");
+   		}
+    
+   		@Override
+   		public void buildFace() {
+   			actor.setFace("GhostFace");
+   		}
+    
+   		@Override
+   		public void buildCostume() {
+   			actor.setCostume("GhostCostume");
+   		}
+    
+   		@Override
+   		public void buildHairstyle() {
+   			actor.setHairstyle("GhostHairStyle");
+   		}
+    
    	}
-    
-   	@Override
-   	public void buildSex() {
-   		actor.setSex("GhostSex");
-   	}
-    
-   	@Override
-   	public void buildFace() {
-   		actor.setFace("GhostFace");
-   	}
-    
-   	@Override
-   	public void buildCostume() {
-   		actor.setCostume("GhostCostume");
-   	}
-    
-   	@Override
-   	public void buildHairstyle() {
-   		actor.setHairstyle("GhostHairStyle");
-   	}
-    
-   }
-   
-    
    ```
-
+   
    
 
 4. 构建产品构建指挥者Director
