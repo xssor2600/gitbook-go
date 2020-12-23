@@ -109,11 +109,9 @@
    }
    ```
 
-   
+3. 不同产品复用相同构建过程的实现者ConcreteBuilder）
 
-3. 不同产品复用相同构建过程的实现（实现具体建造者ConcreteBuilder）
-
-   ```go
+ ```go
    func (od Order) WithOrderId(oid string) Builder {
    	if len(oid) > 0 {
    		od.OrderId = oid
@@ -147,7 +145,6 @@
    
    
    // 产品2: 外卖订单Order的具体构建过程
-   ///// footOrder ///
    func (fo FootOrder) WithOrderId(oid string) Builder {
    	if len(oid) > 0 {
    		fo.OrderId = oid
@@ -181,11 +178,9 @@
    
    ```
 
-   
-
 4. 构建产品构建指挥者Director
 
-   ```go
+```go
    // 构造Director，用来具体构建对象
    func NewOrderBuilder() Builder {
    	return &Order{}
@@ -194,13 +189,11 @@
    func NewFootOrderBuilder() Builder {
    	return &FootOrder{}
    }
-   ```
-
-   
+```
 
 5. 使用Usage
 
-   ```go
+```go
    func Test_builder(t *testing.T) {
    	// 使用相同构建过程，创建支付订单对象
    	payOrder:= NewOrderBuilder().WithOrderId("EG001").
@@ -226,15 +219,12 @@
    	fmt.Println("")
    	fmt.Printf(string(forder))
    }
-   ```
-
-   
-
+```
 6. 用插件自动生成的建造者模式代码
 
-   改种方式是通过组合产品对象product与对应的建造者来创建对象。
+ 改种方式是通过组合产品对象product与对应的建造者来创建对象。
 
-   ```go
+ ```go
    // Order builder pattern code
    type OrderBuilder struct {
    	order *Order
@@ -282,8 +272,8 @@
    		WithPrice(20.40).
    		WithUid(10010).
    		WithGoodName("商品").
-   		WithType("支付订单").Build()
-   ```
+  		WithType("支付订单").Build()
+```
 
    
 
