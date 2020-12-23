@@ -7,5 +7,6 @@
 * [go高级特性](go_improve/README.md)
   * [MPG模型](go_improve/go_mpg_model.md)
   * [Go_汇编plan9学习](go_improve/go_plan9_learn.md)
+  * [Go_profile](go_improve/go_profile_learn.md)
 * [go面试题](interview/README.md)
   * [go面试题](interview/go面试题.md)
