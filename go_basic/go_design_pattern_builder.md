@@ -230,54 +230,52 @@
     改种方式是通过组合产品对象product与对应的建造者来创建对象。
 
    ```go
-   // Order builder pattern code
+      // Order builder pattern code
       type OrderBuilder struct {
-      	order *Order
+      		order *Order
       }
       
       func NewOrderBuilder() *OrderBuilder {
-      	order := &Order{}
-      	b := &OrderBuilder{order: order}
-      	return b
+      		order := &Order{}
+      		b := &OrderBuilder{order: order}
+      		return b
       }
       
       func (b *OrderBuilder) OrderId(orderId string) *OrderBuilder {
-      	b.order.OrderId = orderId
-      	return b
+      		b.order.OrderId = orderId
+      		return b
       }
       
       func (b *OrderBuilder) Price(price float64) *OrderBuilder {
-      	b.order.Price = price
-      	return b
+      		b.order.Price = price
+      		return b
       }
       
       func (b *OrderBuilder) UserId(userId int64) *OrderBuilder {
-      	b.order.UserId = userId
-      	return b
+      		b.order.UserId = userId
+      		return b
       }
       
       func (b *OrderBuilder) GoodName(goodName string) *OrderBuilder {
-      	b.order.GoodName = goodName
-      	return b
+      		b.order.GoodName = goodName
+      		return b
       }
       
       func (b *OrderBuilder) OrderType(orderType string) *OrderBuilder {
-      	b.order.OrderType = orderType
-      	return b
+      		b.order.OrderType = orderType
+      		return b
       }
       
       func (b *OrderBuilder) Build() (*Order, error) {
-      	return b.order, nil
+      		return b.order, nil
       }
-      
-      
       
       // usage
       	payOrder:= NewOrderBuilder().WithOrderId("EG001").
-      		WithPrice(20.40).
-      		WithUid(10010).
-      		WithGoodName("商品").
-     		WithType("支付订单").Build()
+      	WithPrice(20.40).
+      	WithUid(10010).
+      	WithGoodName("商品").
+     	WithType("支付订单").Build()
    ```
 
    
