@@ -112,69 +112,68 @@
 3. 不同产品复用相同构建过程的实现者
 
    ```go
-    func (od Order) WithOrderId(oid string) Builder {
-      	if len(oid) > 0 {
+    		func (od Order) WithOrderId(oid string) Builder {
+      		if len(oid) > 0 {
       		od.OrderId = oid
       	}
-      	return od
-      }
-      func (od Order) WithPrice(m Money) Builder {
-      	od.Price = m
-      	return od
-      }
-      
-      func (od Order) WithUid(uid int64) Builder {
-      	od.UserId = uid
-      	return od
-      }
-      
-      func (od Order) WithGoodName(gn string) Builder {
-      	od.GoodName = gn
-      	return od
-      }
-      
-      func (od Order) WithType(otype string) Builder {
-      	od.OrderType = otype
-      	return od
-      }
-      
-      func (od Order) Build() Builder{
-         // TODO 可以在创建的对象前置处理.....
-      	return od
-      }
-      
-      
-      // 产品2: 外卖订单Order的具体构建过程
-      func (fo FootOrder) WithOrderId(oid string) Builder {
-      	if len(oid) > 0 {
-      		fo.OrderId = oid
+      		return od
+     	 }
+      	func (od Order) WithPrice(m Money) Builder {
+      		od.Price = m
+      		return od
       	}
-      	return fo
-      }
-      func (fo FootOrder) WithPrice(m Money) Builder {
-      	fo.Price = m
-      	return fo
-      }
       
-      func (fo FootOrder) WithUid(uid int64) Builder {
-      	fo.UserId = uid
-      	return fo
-      }
+     	 func (od Order) WithUid(uid int64) Builder {
+      		od.UserId = uid
+      		return od
+      	}
       
-      func (fo FootOrder) WithGoodName(gn string) Builder {
-      	fo.GoodName = gn
-      	return fo
-      }
+      	func (od Order) WithGoodName(gn string) Builder {
+      		od.GoodName = gn
+      		return od
+      	}
       
-      func (fo FootOrder) WithType(otype string) Builder {
-      	fo.OrderType = otype
-      	return fo
-      }
+      	func (od Order) WithType(otype string) Builder {
+      		od.OrderType = otype
+      		return od
+      	}
       
-      func (fo FootOrder) Build() Builder{
-        // TODO 可以在创建的对象前置处理.....
-      	return fo
-      }
+      	func (od Order) Build() Builder{
+         // TODO 可以在创建的对象前置处理.....
+      		return od
+     	 }
+      
+      	// 产品2: 外卖订单Order的具体构建过程
+      	func (fo FootOrder) WithOrderId(oid string) Builder {
+      	if len(oid) > 0 {
+      			fo.OrderId = oid
+      	}
+      		return fo
+      	}
+        func (fo FootOrder) WithPrice(m Money) Builder {
+      		fo.Price = m
+      		return fo
+      	}
+      
+      	func (fo FootOrder) WithUid(uid int64) Builder {
+      		fo.UserId = uid
+      		return fo
+      	}
+      
+      	func (fo FootOrder) WithGoodName(gn string) Builder {
+      		fo.GoodName = gn
+      		return fo
+      	}
+      
+      	func (fo FootOrder) WithType(otype string) Builder {
+      		fo.OrderType = otype
+      		return fo
+      	}
+      
+      	func (fo FootOrder) Build() Builder{
+        	// TODO 可以在创建的对象前置处理.....
+      		return fo
+      	}
       
    ```
 
