@@ -261,7 +261,7 @@
      在golang中，对抽象产品Product的继承，就是通过`将一个struct，作为属性定义在子类struct中`.通过**struct+interface**组合成了`封装`的概念。定义抽象工厂方法，并针对不同的子产品，定义不同具体工厂实现去创建产品。
 
      ```go
-   		// 定义一个所有Product的行为抽象
+     		// 定义一个所有Product的行为抽象
      		type OrderInterface interface {
      			Get() interface{}
      		}
@@ -298,16 +298,17 @@
      ```
      
   2. 因为工厂方法的概念，就是需要根据抽象的工厂方法，创建具体的工厂方法，来创建具体的子产品。
-  
-   ```go
-  		// 定义抽象的工厂方法，注意此处返回的是Product的行为抽象,抽象工厂interface，内部有抽象方法返回抽象的产品Product
-   		type AbstrctOrderFactory interface {
+
+     ```go
+  		
+     		// 定义抽象的工厂方法，注意此处返回的是Product的行为抽象,抽象工厂interface，内部有抽象方法返回抽象的产品Product
+     		type AbstrctOrderFactory interface {
      			createOrder(param BaseReq) OrderInterface
-   		}
+     		}
      
-   
+     
      		// 分别定义不同具体工厂创建对象
-   		type WechatOrderFactory struct {
+     		type WechatOrderFactory struct {
      		}
      
      		func (wof *WechatOrderFactory) createOrder(param BaseReq) OrderInterface {
@@ -343,24 +344,27 @@
      		}
      ```
      
+     
+     
   3. Usage使用方式
      和标准定义工厂方法模式略有不同，此处是直接创建具体的工厂对象，进而来创建具体的子产品。
      因为抽象工厂在golang中是interface类型的，不能直接实例化的。
-  
+
      ```go
-      func Test_Fm(t *testing.T) {
+     
+     	func Test_Fm(t *testing.T) {
      		param := BaseReq{}
      		// 创建微信订单对象
      		wechatFactory := &WechatOrderFactory{}
      		wxOrder := wechatFactory.createOrder(param).Get()
      		fmt.Println(wxOrder)
-   
+     
      		// 创建支付宝订单
-   		alipayFactory := &AlipayOrderFactory{}
+     		alipayFactory := &AlipayOrderFactory{}
      		alipayOrder := alipayFactory.createOrder(param).Get()
      		fmt.Println(alipayOrder)
      
-   		// 创建apple订单
+     		// 创建apple订单
      		appleFactory := &AppleOrderFactory{}
      		appleOrder := appleFactory.createOrder(param).Get()
      		fmt.Println(appleOrder)
@@ -371,87 +375,89 @@
      		fmt.Println(googleOrder)
      	}
      ```
+
   
-  - 总结
+
+  ##### 总结
+
+  根据上面创建型过程，是否在不是传统意义的设计模式上，将两种结合，第一个步进行外部渠道的路由，第二步则进行具体渠道订单的创建。
+
+  ```go
+  	func (of *OrderStaticFactory) createOrder(param BaseReq) (OrderInterface,int,error) {
+  		manner := param.Manner
+  		// lc := param.Lc
   
-    根据上面创建型过程，是否在不是传统意义的设计模式上，将两种结合，第一个步进行外部渠道的路由，第二步则进行具体渠道订单的创建。
+  		// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
+  		// orderCreateCommonCheck(param) ....
+  		// sessionValid(param) ...
   
-    ```go
-    	func (of *OrderStaticFactory) createOrder(param BaseReq) (OrderInterface,int,error) {
-    		manner := param.Manner
-    		// lc := param.Lc
-    
-    		// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
-    		// orderCreateCommonCheck(param) ....
-    		// sessionValid(param) ...
-    
-    
-    		// 尽量减少分支，只是根据一级manner进行划分分支
+  
+  		// 尽量减少分支，只是根据一级manner进行划分分支
   		switch manner {
-    		case "alipay":
+  		case "alipay":
         	alipayFactory := &AlipayOrderFactory{}
-    				alipayOrder := alipayFactory.createOrder(param).Get()
+  				alipayOrder := alipayFactory.createOrder(param).Get()
         	return alipayOrder
-    		case "weixin":
+  		case "weixin":
   				wechatFactory := &WechatOrderFactory{}
-    	    	wxOrder := wechatFactory.createOrder(param).Get()
+  	    	wxOrder := wechatFactory.createOrder(param).Get()
         	return wxOrder
-    		case "apple":
-    		  	appleFactory := &AppleOrderFactory{}
-        		appleOrder := appleFactory.createOrder(param).Get()
-    		  	return appleOrder
-    		case "googlepay":
-    	   		googleFactory := &GoogleOrderFactory{}
-    	    	googleOrder := googleFactory.createOrder(param).Get()
-          	return googleOrder
-    		}
-    		return &PayOrder{},0,nil
-    	}
-    
-    
-    
-    	// client usage
-    	func main() {
-        // 创建工厂对象，并根据传入内容进行创建具体的Product
-       	 param := BaseReq{}
-    	 	 payOrder,code,errr := newOrderFactory().createOrder(param)
-        	fmt.Printf(payOrder.Get().Order)
-    	}
-    
-    	// 或者能够更简化，其实根据渠道分支判断逻辑总是少不了，无法是通过其他映射关系，字段来选择。
-    	// 只是在程序的粒度上又进行变换,这样可以缩小变换的范围
-    	func (of *OrderStaticFactory) createOrder(param BaseReq) (OrderInterface,int,error) {
-    		manner := param.Manner
-    		// lc := param.Lc
-    
-    		// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
-    		// orderCreateCommonCheck(param) ....
-    		// sessionValid(param) ...
-    
-    
-    		// 尽量减少分支，只是根据一级manner进行划分分支
-      	mannerFactory := getFactoryByManner(param.manner)
-      	return mannerFactory.createOrder(param).Get(),0,nil
-    	}
-    
-    
-    	func getFactoryByManner (manner string) AbstrctOrderFactory {
-      	switch manner {
-    		case "alipay":
-          	return &AlipayOrderFactory{}
-    		case "weixin":
-          	return &WechatOrderFactory{}
-    		case "apple":
-    		  	return &AppleOrderFactory{}
-    		case "googlepay":
-    	   		return &GoogleOrderFactory{}
-    		}
-      	return nil
-    	}
-    
-    ```
-    
-    
+  		case "apple":
+  		  	appleFactory := &AppleOrderFactory{}
+      		appleOrder := appleFactory.createOrder(param).Get()
+  		  	return appleOrder
+  		case "googlepay":
+  	   		googleFactory := &GoogleOrderFactory{}
+  	    	googleOrder := googleFactory.createOrder(param).Get()
+        	return googleOrder
+  		}
+  		return &PayOrder{},0,nil
+  	}
+  
+  
+  
+  	// client usage
+  	func main() {
+      // 创建工厂对象，并根据传入内容进行创建具体的Product
+     	 param := BaseReq{}
+  	 	 payOrder,code,errr := newOrderFactory().createOrder(param)
+      	fmt.Printf(payOrder.Get().Order)
+  	}
+  
+  	// 或者能够更简化，其实根据渠道分支判断逻辑总是少不了，无法是通过其他映射关系，字段来选择。
+  	// 只是在程序的粒度上又进行变换,这样可以缩小变换的范围
+  	func (of *OrderStaticFactory) createOrder(param BaseReq) (OrderInterface,int,error) {
+  		manner := param.Manner
+  		// lc := param.Lc
+  
+  		// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
+  		// orderCreateCommonCheck(param) ....
+  		// sessionValid(param) ...
+  
+  
+  		// 尽量减少分支，只是根据一级manner进行划分分支
+    	mannerFactory := getFactoryByManner(param.manner)
+    	return mannerFactory.createOrder(param).Get(),0,nil
+  	}
+  
+  
+  	func getFactoryByManner (manner string) AbstrctOrderFactory {
+    	switch manner {
+  		case "alipay":
+        	return &AlipayOrderFactory{}
+  		case "weixin":
+        	return &WechatOrderFactory{}
+  		case "apple":
+  		  	return &AppleOrderFactory{}
+  		case "googlepay":
+  	   		return &GoogleOrderFactory{}
+  		}
+    	return nil
+  	}
+  
+  ```
+
+  
 
 
 
