@@ -305,8 +305,6 @@
      		type AbstrctOrderFactory interface {
      			createOrder(param BaseReq) OrderInterface
      		}
-     
-     
      		// 分别定义不同具体工厂创建对象
      		type WechatOrderFactory struct {
      		}
