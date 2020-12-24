@@ -11,7 +11,7 @@
    在OOP中，通常都会有`抽象`的概念，通常在高级语言中，会通过内建的一些关键字进行表达，例如`abstrct,interface...`,目的就是让开发者通过这些抽象，去设计高可拓展，稳定的程序。
 
 
-   例如在Java中，如果不是面向接口（抽象）去创建产品，那么在对象的创建过程，和对象的使用过程都会有局限性，因为太过于具体而不利于拓展。
+  例如在Java中，如果不是面向接口（抽象）去创建产品，那么在对象的创建过程，和对象的使用过程都会有局限性，因为太过于具体而不利于拓展。
 
    ```java
    // 例如有两个实体
@@ -188,65 +188,60 @@
      
      ```
 
-     
-
   2. 定义抽象工厂，根据不同的内容创建不同对象
-     通常简单工厂模式，就是`通过单个工厂类，去创建多个不同的对象Product`,改种弊端就是若是新增产品，那么必须在工厂类中需要修改，新建分支。
-
+   通常简单工厂模式，就是`通过单个工厂类，去创建多个不同的对象Product`,改种弊端就是若是新增产品，那么必须在工厂类中需要修改，新建分支。
+  
      > 这里需要注意的一点是：工厂方法创建的对象不是传统Java中的Product，在golang中，工厂方法返回的是Product中具有相同行为的抽象，即为方法=> interface
 
      ```go
-     // 静态工厂对象
-     type OrderStaticFactory struct {
+   	// 静态工厂对象
+     	type OrderStaticFactory struct {
      
-     }
+     	}
      
-     func newOrderFactory() *OrderStaticFactory {
-     	return &OrderStaticFactory{}
-     }
+     	func newOrderFactory() *OrderStaticFactory {
+     		return &OrderStaticFactory{}
+     	}
      
-     // 定义简单工厂创建不同的product的方法,这里返回的不是Product，而是Product's 方法
-     // 创建对象的静态工厂
-     func (of *OrderStaticFactory) createOrder(param BaseReq) (OrderInterface,int,error) {
-     	manner := param.Manner
-     	// lc := param.Lc
-     
-     	// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
-     	// orderCreateCommonCheck(param) ....
-     	// sessionValid(param) ...
-     
-     
-     	// 尽量减少分支，只是根据一级manner进行划分分支
-     	switch manner {
-     	case "alipay":
+     	// 定义简单工厂创建不同的product的方法,这里返回的不是Product，而是Product's 方法
+     	// 创建对象的静态工厂
+     	func (of *OrderStaticFactory) createOrder(param BaseReq) (OrderInterface,int,error) {
+     		manner := param.Manner
+     		// lc := param.Lc
+     		// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
+     		// orderCreateCommonCheck(param) ....
+     		// sessionValid(param) ...
+     		// 尽量减少分支，只是根据一级manner进行划分分支
+     		switch manner {
+     		case "alipay":
              // createAlipayOrder(param)
              // 内部service再根据具体manner，lc进行创建订单
-     	case "weixin":
-     		// createWechatOrder(param)
-     		// 内部service再根据具体lc进行创建订单
-     	case "apple":
-     		// createAppleOrder(param)
-     	case "googlepay":
-     		// createGooglePayOrder(param)
-     	}
-     	return &PayOrder{},0,nil
-     }
+     		case "weixin":
+     				// createWechatOrder(param)
+     				// 内部service再根据具体lc进行创建订单
+     		case "apple":
+     				// createAppleOrder(param)
+     		case "googlepay":
+     				// createGooglePayOrder(param)
+     		}
+     		return &PayOrder{},0,nil
+     		}
      
      ```
-
+  
   3. 使用方式Usage
-
+  
      ```go
-   func main() {
-         // 创建工厂对象，并根据传入内容进行创建具体的Product
-         param := BaseReq{}
-     	  payOrder,code,errr := newOrderFactory().createOrder(param)
-         fmt.Printf(payOrder.Get().Order)
-     }
+     	func main() {
+       	// 创建工厂对象，并根据传入内容进行创建具体的Product
+         	param := BaseReq{}
+   	  	payOrder,code,errr := newOrderFactory().createOrder(param)
+         	fmt.Printf(payOrder.Get().Order)
+   	}
      ```
   
      
-
+  
 - 工厂方法模式
 
   与简单工厂模式不同，工厂方法模式：`每个具体工厂类只负责创建对应的产品`,也就是产品Product与Factory工厂是一一对应的。好处就是，不像简单工厂模式，新建产品Product还是需要修改单一的工厂方法，而工厂方法模式因为产品与工厂是一一对应，则不需要改动之前的产品代码。
