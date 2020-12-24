@@ -300,8 +300,7 @@
   2. 因为工厂方法的概念，就是需要根据抽象的工厂方法，创建具体的工厂方法，来创建具体的子产品。
 
      ```go
-  		
-     		// 定义抽象的工厂方法，注意此处返回的是Product的行为抽象,抽象工厂interface，内部有抽象方法返回抽象的产品Product
+  		// 定义抽象的工厂方法，注意此处返回的是Product的行为抽象,抽象工厂interface，内部有抽象方法返回抽象的产品Product
      		type AbstrctOrderFactory interface {
      			createOrder(param BaseReq) OrderInterface
      		}
@@ -313,17 +312,12 @@
      			// createWehchatOrder(param)
      			return &WechatProduct{}
      		}
-     
-     
      		type AlipayOrderFactory struct {
      		}
-     
      		func (wof *AlipayOrderFactory) createOrder(param BaseReq) OrderInterface {
      			// createAlipayOrder(param)
      			return &AlipayProduct{}
      		}
-     
-     
      		type AppleOrderFactory struct {
      		}
      
@@ -331,8 +325,6 @@
      			// createAppleOrder(param)
      			return &AppleProduct{}
      		}
-     
-     
      		type GoogleOrderFactory struct {
      		}
      
