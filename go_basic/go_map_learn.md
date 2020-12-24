@@ -115,12 +115,12 @@ Hashmap 的使用方面有两个重要的特点:
   **需要编译器和 runtime （运行时）之间的相互协作。**可以看到编译器中定义的在初始化map时候调用的`makemap`方法，入参数是`maptype`，创建返回一个`hamp`。
 
   ```go
-  ///usr/local/go/src/cmd/compile/internal/gc/builtin/runtime.go
-  func makemap(mapType *byte, hint int, mapbuf *any) (hmap map[any]any)
   
+  	///usr/local/go/src/cmd/compile/internal/gc/builtin/runtime.go
+  	func makemap(mapType *byte, hint int, mapbuf *any) (hmap map[any]any)
   
-  // /usr/local/go/src/runtime/map.go
-  func makemap(t *maptype, hint int, h *hmap) *hmap {
+  	// /usr/local/go/src/runtime/map.go
+  	func makemap(t *maptype, hint int, h *hmap) *hmap {
   	mem, overflow := math.MulUintptr(uintptr(hint), t.bucket.size)
   	if overflow || mem > maxAlloc {
   		hint = 0
@@ -151,10 +151,8 @@ Hashmap 的使用方面有两个重要的特点:
   			h.extra.nextOverflow = nextOverflow
   		}
   	}
-  
-  	return h
-  }
-  
+  		return h
+  	}
   ```
 
   1. 编译时间重写
@@ -169,10 +167,6 @@ Hashmap 的使用方面有两个重要的特点:
 
      > 值得注意的是，channel 中也做了相同的事，slice 却没有。
      > 这是因为 channel 是复杂的数据类型。发送，接收和 select 操作和调度器之间都有复杂的交互，所以就被委托给了 runtime。相比较而言，slice 就简单很多了。像 slice 的存取，len 和 cap 这些操作编译器就自己做了，而像 copy 和 append 这种复杂的还是委托给了 runtime。
-
-     
-
-     
 
   2. runtime运行时map 代码解释
 
