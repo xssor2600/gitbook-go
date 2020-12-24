@@ -350,12 +350,12 @@ bmap 是存放 k-v 的地方，需要仔细看 bmap 的内部组成,**bmap内存
   > 2. 高8位，用于key冲突的value的存放位置的定位（连表法）
 
   ```go
-  // mapaccess1 returns a pointer to h[key].  Never returns nil, instead
-  // it will return a reference to the zero object for the elem type if
-  // the key is not in the map.
-  // NOTE: The returned pointer may keep the whole map live, so don't
-  // hold onto it for very long.
-  func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {
+  	// mapaccess1 returns a pointer to h[key].  Never returns nil, instead
+  	// it will return a reference to the zero object for the elem type if
+  	// the key is not in the map.
+  	// NOTE: The returned pointer may keep the whole map live, so don't
+  	// hold onto it for very long.
+  	func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {
   	if raceenabled && h != nil {
   		callerpc := getcallerpc()
   		pc := funcPC(mapaccess1)
@@ -400,7 +400,7 @@ bmap 是存放 k-v 的地方，需要仔细看 bmap 的内部组成,**bmap内存
   	}
     // 计算出高 8 位的 hash值，用于在bucket中8个地址中索引
   	top := tophash(hash)
-  bucketloop:
+  	bucketloop:
     // 外层整个大循环：bucket 找完（还没找到），继续到 overflow bucket 里找
   	for ; b != nil; b = b.overflow(t) {
   		for i := uintptr(0); i < bucketCnt; i++ {
@@ -429,26 +429,24 @@ bmap 是存放 k-v 的地方，需要仔细看 bmap 的内部组成,**bmap内存
   					e = *((*unsafe.Pointer)(e))
   				}
   				return e
+  				}
   			}
   		}
+   	 //说明没有目标 key，返回零值
+  		return unsafe.Pointer(&zeroVal[0])
   	}
-    //说明没有目标 key，返回零值
-  	return unsafe.Pointer(&zeroVal[0])
-  }
-  
-  
   
   ```
-
+  
   > uintptr是golang的内置类型，是能存储指针的整型，在64位平台上底层的数据类型是:
-  >
+>
   > ```
   > typedef unsigned long long int  uint64;
   > typedef uint64          uintptr;
   > ```
-
+  
   ```go
-  	// data offset should be the size of the bmap struct, but needs to be
+	// data offset should be the size of the bmap struct, but needs to be
   	// aligned correctly. For amd64p32 this means 64-bit alignment
   	// even though pointers are 32 bit.
   	dataOffset = unsafe.Offsetof(struct {
@@ -456,7 +454,7 @@ bmap 是存放 k-v 的地方，需要仔细看 bmap 的内部组成,**bmap内存
   		v int64
   	}{}.v)
   ```
-
+  
   dataOffset 是 key 相对于 bmap 起始地址的偏移,因此 bucket 里 key 的起始地址就是` unsafe.Pointer(b)+dataOffset`。**内存中：bmap大小长度+起始key地址**，第 i 个 key 的地址就要在此基础上跨过 i 个 key 的大小；而我们又知道，value 的地址是在所有 key 之后，因此第 i 个 value 的地址还需要加上所有 key 的偏移。
 
   
@@ -464,7 +462,7 @@ bmap 是存放 k-v 的地方，需要仔细看 bmap 的内部组成,**bmap内存
   **外层是一个无限循环overflow:**
 
   ```go
-  for ; b != nil; b = b.overflow(t) {
+for ; b != nil; b = b.overflow(t) {
     ....
   }
   
@@ -477,7 +475,7 @@ bmap 是存放 k-v 的地方，需要仔细看 bmap 的内部组成,**bmap内存
     overflow uintptr // 保存超过8个相同hash(key)新创建的bucket地址
   }
   ```
-
+  
   遍历所有的 bucket，这相当于是一个 bucket 链表，因为bmap中包含一个指向其他bucket的指针地址。
 
   当定位到一个具体的 bucket 时，里层循环就是遍历这个 bucket 里所有的 cell，或者说所有的槽位，也就是 bucketCnt=8 个槽位。外层循环就是遍历所有的bucket。
@@ -491,7 +489,7 @@ bmap 是存放 k-v 的地方，需要仔细看 bmap 的内部组成,**bmap内存
     当一个 cell 的 tophash 值小于 minTopHash 时，标志这个 cell 的迁移状态。因为这个状态值是放在 tophash 数组里，为了和正常的哈希值区分开，会给 key 计算出来的哈希值一个增量：minTopHash。这样就能区分正常的 top hash 值和表示状态的哈希值。
 
     ```go
-    // entries in the evacuated* states (except during the evacuate() method, which only happens
+  // entries in the evacuated* states (except during the evacuate() method, which only happens
     	emptyRest      = 0 // this cell is empty, and there are no more non-empty cells at higher indexes or overflows.
     	emptyOne       = 1 // this cell is empty
     	evacuatedX     = 2 // key/elem is valid.  Entry has been evacuated to first half of larger table.
@@ -499,16 +497,16 @@ bmap 是存放 k-v 的地方，需要仔细看 bmap 的内部组成,**bmap内存
     	evacuatedEmpty = 4 // cell is empty, bucket is evacuated.
     	minTopHash     = 5 // minimum tophash for a normal filled cell. 
     ```
-
+  
     源码里判断这个 bucket 是否已经搬迁完毕，用到的函数:
 
     ```go
-    func evacuated(b *bmap) bool {
+  func evacuated(b *bmap) bool {
     	h := b.tophash[0]
     	return h > emptyOne && h < minTopHash
     }
     ```
-
+  
     只取了 tophash 数组的第一个值，判断它是否在 0-4 之间。对比上面的常量，当 top hash 是 `evacuatedEmpty`、 `evacuatedX`、 `evacuatedY` 这三个值之一，说明此 bucket 中的 key 全部被搬迁到了新 bucket。
 
 
