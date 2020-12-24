@@ -7,6 +7,7 @@
   * [go unsafe_ptr和uintptr关系](go_basic/go_unsafe_ptr_diff_uintptr.md)
   * [go design_pattern_builder](go_basic/go_design_pattern_builder.md)
   * [go design_pattern_factory_method](go_basic/go_design_pattern_factory_method.md)
+  * [go map学习](go_basic/go_map_learn.md)
 * [go高级特性](go_improve/README.md)
   * [MPG模型](go_improve/go_mpg_model.md)
   * [Go_汇编plan9学习](go_improve/go_plan9_learn.md)
