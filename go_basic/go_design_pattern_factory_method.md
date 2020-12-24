@@ -256,63 +256,58 @@
   > // GooleOrderFactory --> GoogleOrder
   > ```
 
-  
-
   1. 定义抽象产品Product，不同的具体产品需要继承该产品。
 
-     在golang中，对抽象产品Product的继承，就是通过`将一个struct，作为属性定义在子类struct中`.通过**struct+interface**组合成了`封装`的概念。
+     在golang中，对抽象产品Product的继承，就是通过`将一个struct，作为属性定义在子类struct中`.通过**struct+interface**组合成了`封装`的概念。定义抽象工厂方法，并针对不同的子产品，定义不同具体工厂实现去创建产品。
 
      ```go
-     	// 定义一个所有Product的行为抽象
-     	type OrderInterface interface {
-     		Get() interface{}
-     	}
+   		// 定义一个所有Product的行为抽象
+     		type OrderInterface interface {
+     			Get() interface{}
+     		}
      
-     	// 定义不同的支付订单product
-     	type AlipayProduct struct {
-     		PayOrder
-     	}
-     	func (ap *AlipayProduct) Get() interface{}{
-     		return ap
-     	}
+     		// 定义不同的支付订单product
+     		type AlipayProduct struct {
+     			PayOrder
+     		}
+     		func (ap *AlipayProduct) Get() interface{}{
+     			return ap
+     		}
      
-     	type WechatProduct struct {
-     		PayOrder
-     	}
-     	func (wp *WechatProduct) Get() interface{}{
-     		return wp
-     	}
+     		type WechatProduct struct {
+     			PayOrder
+     		}
+     		func (wp *WechatProduct) Get() interface{}{
+     			return wp
+     		}
      
-     	type AppleProduct struct {
-     		PayOrder
-     	}
-     	func (ap *AppleProduct) Get() interface{}{
-     		return ap
-     	}
+     		type AppleProduct struct {
+     			PayOrder
+     		}
+     		func (ap *AppleProduct) Get() interface{}{
+     			return ap
+     		}
      
-     	type GoogleProduct struct {
-     		PayOrder
-     	}
-     	func (gp *GoogleProduct) Get() interface{}{
-     		return gp
-     	}
-     
+     		type GoogleProduct struct {
+     			PayOrder
+     		}
+     		func (gp *GoogleProduct) Get() interface{}{
+     			return gp
+     		}
      
      ```
-
-  2. 定义抽象工厂方法，并针对不同的子产品，定义不同具体工厂实现去创建产品
-
-     因为工厂方法的概念，就是需要根据抽象的工厂方法，创建具体的工厂方法，来创建具体的子产品。
-
-     ```go
-   	// 抽象工厂interface，内部有抽象方法返回抽象的产品Product
-     	// 定义抽象的工厂方法，注意此处返回的是Product的行为抽象
-   	type AbstrctOrderFactory interface {
-     		createOrder(param BaseReq) OrderInterface
+     
+  2. 因为工厂方法的概念，就是需要根据抽象的工厂方法，创建具体的工厂方法，来创建具体的子产品。
+  
+   ```go
+  	// 抽象工厂interface，内部有抽象方法返回抽象的产品Product
+   	// 定义抽象的工厂方法，注意此处返回的是Product的行为抽象
+     	type AbstrctOrderFactory interface {
+   		createOrder(param BaseReq) OrderInterface
      	}
+   
      
-     
-     	// 分别定义不同具体工厂创建对象
+   	// 分别定义不同具体工厂创建对象
      	type WechatOrderFactory struct {
      	}
      
@@ -354,18 +349,18 @@
      和标准定义工厂方法模式略有不同，此处是直接创建具体的工厂对象，进而来创建具体的子产品。
      因为抽象工厂在golang中是interface类型的，不能直接实例化的。
   
-   ```go
+     ```go
      	func Test_Fm(t *testing.T) {
-   	param := BaseReq{}
+     	param := BaseReq{}
      	// 创建微信订单对象
      	wechatFactory := &WechatOrderFactory{}
-     	wxOrder := wechatFactory.createOrder(param).Get()
-   	fmt.Println(wxOrder)
-     
+   	wxOrder := wechatFactory.createOrder(param).Get()
+     	fmt.Println(wxOrder)
+   
      	// 创建支付宝订单
      	alipayFactory := &AlipayOrderFactory{}
      	alipayOrder := alipayFactory.createOrder(param).Get()
-     	fmt.Println(alipayOrder)
+   	fmt.Println(alipayOrder)
      
      	// 创建apple订单
      	appleFactory := &AppleOrderFactory{}
@@ -387,20 +382,20 @@
   
   - 总结
   
-  根据上面创建型过程，是否在不是传统意义的设计模式上，将两种结合，第一个步进行外部渠道的路由，第二步则进行具体渠道订单的创建。
+    根据上面创建型过程，是否在不是传统意义的设计模式上，将两种结合，第一个步进行外部渠道的路由，第二步则进行具体渠道订单的创建。
   
-  ```go
+    ```go
     func (of *OrderStaticFactory) createOrder(param BaseReq) (OrderInterface,int,error) {
-  	manner := param.Manner
-    	// lc := param.Lc
+    	manner := param.Manner
+  	// lc := param.Lc
+    
+  	// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
+    	// orderCreateCommonCheck(param) ....
+  	// sessionValid(param) ...
+    
   
-    	// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
-  	// orderCreateCommonCheck(param) ....
-    	// sessionValid(param) ...
-    
-    
     	// 尽量减少分支，只是根据一级manner进行划分分支
-    	switch manner {
+  	switch manner {
     	case "alipay":
           alipayFactory := &AlipayOrderFactory{}
     			alipayOrder := alipayFactory.createOrder(param).Get()
