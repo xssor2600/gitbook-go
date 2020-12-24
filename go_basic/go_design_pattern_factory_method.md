@@ -300,49 +300,48 @@
   2. 因为工厂方法的概念，就是需要根据抽象的工厂方法，创建具体的工厂方法，来创建具体的子产品。
   
    ```go
-  	// 抽象工厂interface，内部有抽象方法返回抽象的产品Product
-   	// 定义抽象的工厂方法，注意此处返回的是Product的行为抽象
-     	type AbstrctOrderFactory interface {
-   		createOrder(param BaseReq) OrderInterface
-     	}
+  		// 抽象工厂interface，内部有抽象方法返回抽象的产品Product
+   		// 定义抽象的工厂方法，注意此处返回的是Product的行为抽象
+     		type AbstrctOrderFactory interface {
+   			createOrder(param BaseReq) OrderInterface
+     		}
    
      
-   	// 分别定义不同具体工厂创建对象
-     	type WechatOrderFactory struct {
-     	}
+   		// 分别定义不同具体工厂创建对象
+     		type WechatOrderFactory struct {
+     		}
      
-     	func (wof *WechatOrderFactory) createOrder(param BaseReq) OrderInterface {
-     		// createWehchatOrder(param)
-     		return &WechatProduct{}
-     	}
-     
-     
-     	type AlipayOrderFactory struct {
-     	}
-     
-     	func (wof *AlipayOrderFactory) createOrder(param BaseReq) OrderInterface {
-     		// createAlipayOrder(param)
-     		return &AlipayProduct{}
-     	}
+     		func (wof *WechatOrderFactory) createOrder(param BaseReq) OrderInterface {
+     			// createWehchatOrder(param)
+     			return &WechatProduct{}
+     		}
      
      
-     	type AppleOrderFactory struct {
-     	}
+     		type AlipayOrderFactory struct {
+     		}
      
-     	func (wof *AppleOrderFactory) createOrder(param BaseReq) OrderInterface {
-     		// createAppleOrder(param)
-     		return &AppleProduct{}
-     	}
+     		func (wof *AlipayOrderFactory) createOrder(param BaseReq) OrderInterface {
+     			// createAlipayOrder(param)
+     			return &AlipayProduct{}
+     		}
      
      
-     	type GoogleOrderFactory struct {
-     	}
+     		type AppleOrderFactory struct {
+     		}
      
-     	func (wof *GoogleOrderFactory) createOrder(param BaseReq) OrderInterface {
-     		// createGoogleOrder(param)
-     		return &GoogleProduct{}
-     	}
+     		func (wof *AppleOrderFactory) createOrder(param BaseReq) OrderInterface {
+     			// createAppleOrder(param)
+     			return &AppleProduct{}
+     		}
      
+     
+     		type GoogleOrderFactory struct {
+     		}
+     
+     		func (wof *GoogleOrderFactory) createOrder(param BaseReq) OrderInterface {
+     			// createGoogleOrder(param)
+     			return &GoogleProduct{}
+     		}
      ```
      
   3. Usage使用方式
@@ -354,14 +353,14 @@
      	param := BaseReq{}
      	// 创建微信订单对象
      	wechatFactory := &WechatOrderFactory{}
-   	wxOrder := wechatFactory.createOrder(param).Get()
-     	fmt.Println(wxOrder)
-   
-     	// 创建支付宝订单
+     	wxOrder := wechatFactory.createOrder(param).Get()
+   	fmt.Println(wxOrder)
+     
+   	// 创建支付宝订单
      	alipayFactory := &AlipayOrderFactory{}
      	alipayOrder := alipayFactory.createOrder(param).Get()
-   	fmt.Println(alipayOrder)
-     
+     	fmt.Println(alipayOrder)
+   
      	// 创建apple订单
      	appleFactory := &AppleOrderFactory{}
      	appleOrder := appleFactory.createOrder(param).Get()
@@ -387,16 +386,16 @@
     ```go
     func (of *OrderStaticFactory) createOrder(param BaseReq) (OrderInterface,int,error) {
     	manner := param.Manner
-  	// lc := param.Lc
-    
-  	// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
-    	// orderCreateCommonCheck(param) ....
-  	// sessionValid(param) ...
-    
+    	// lc := param.Lc
   
-    	// 尽量减少分支，只是根据一级manner进行划分分支
-  	switch manner {
-    	case "alipay":
+    	// 可以做一些公共的基础逻辑校验，例如通用参数校验，session校验等
+  	// orderCreateCommonCheck(param) ....
+    	// sessionValid(param) ...
+  
+    
+  	// 尽量减少分支，只是根据一级manner进行划分分支
+    	switch manner {
+  	case "alipay":
           alipayFactory := &AlipayOrderFactory{}
     			alipayOrder := alipayFactory.createOrder(param).Get()
           return alipayOrder
